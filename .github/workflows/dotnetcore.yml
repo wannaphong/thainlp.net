@@ -14,8 +14,11 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore thainlp/*.sln
+      working-directory: thainlp
+      run: dotnet restore
     - name: Build
-      run: dotnet build thainlp/*.sln --configuration Release --no-restore
+      working-directory: thainlp
+      run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test thainlp/*.sln --no-restore --verbosity normal
+      working-directory: thainlp
+      run: dotnet test --no-restore --verbosity normal
