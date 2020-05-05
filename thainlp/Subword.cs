@@ -16,12 +16,12 @@ namespace Thainlp
             List<string> d = new List<string>();
             while (p < txt.Length)
             {
-                Console.WriteLine("c : " + txt[p..]);
+               // Console.WriteLine("c : " + txt[p..]);
                 Match mc = Regex.Match(txt[p..], re);
                 if (mc.Success)
                 {
                     n = mc.Value.Length;
-                    Console.WriteLine(n);
+                 //   Console.WriteLine(n);
                 }
                 else
                 {
