@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\thainlp\thainlp.csproj" />
+    <ProjectReference Include="..\thainlp\Thainlp.csproj" />
   </ItemGroup>
 
 </Project>

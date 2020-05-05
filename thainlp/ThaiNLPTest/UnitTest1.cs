@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using thainlp;
+using Thainlp;
 namespace ThaiNLPTest
 {
     [TestClass]

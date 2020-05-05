@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "D:\\thainlp.net\\thainlp\\thainlp\\thainlp.csproj": {}
+    "D:\\thainlp.net\\thainlp\\thainlp\\Thainlp.csproj": {}
   },
   "projects": {
-    "D:\\thainlp.net\\thainlp\\thainlp\\thainlp.csproj": {
+    "D:\\thainlp.net\\thainlp\\thainlp\\Thainlp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\thainlp.net\\thainlp\\thainlp\\thainlp.csproj",
-        "projectName": "thainlp",
-        "projectPath": "D:\\thainlp.net\\thainlp\\thainlp\\thainlp.csproj",
+        "projectUniqueName": "D:\\thainlp.net\\thainlp\\thainlp\\Thainlp.csproj",
+        "projectName": "Thainlp",
+        "projectPath": "D:\\thainlp.net\\thainlp\\thainlp\\Thainlp.csproj",
         "packagesPath": "C:\\Users\\TC\\.nuget\\packages\\",
         "outputPath": "D:\\thainlp.net\\thainlp\\thainlp\\obj\\",
         "projectStyle": "PackageReference",
