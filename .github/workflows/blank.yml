@@ -12,5 +12,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.102
+    - name: config .NET Core
+      run: export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
     - name: Test
       run: dotnet test ./thainlp/*.sln
