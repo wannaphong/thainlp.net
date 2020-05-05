@@ -10,8 +10,9 @@ namespace ThaiNLPTest
         {
 
             string txt = "ประเทศไทย";
-            string[] tcc = new string[] {"ป","ระ","เท","ศ","ไท","ย"};
-            Assert.AreEqual(Subword.tcc(txt), tcc);
+            string[] tcc = new string[6] {"ป","ระ","เท","ศ","ไท","ย"};
+            string[] tcc_output = Subword.tcc(txt);
+            Assert.AreEqual(tcc_output, tcc);
         }
     }
 }
