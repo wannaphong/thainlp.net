@@ -31,10 +31,7 @@ namespace Thainlp
                 d.Add(txt[p..temp]);
                 p += n;
             }
-            foreach (string i in d)
-            {
-                Console.WriteLine(i);
-            }
+            
             return d.ToArray();
         }
         public static int[] tcc_pos(string text)
