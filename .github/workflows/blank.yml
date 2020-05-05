@@ -15,4 +15,4 @@ jobs:
     - name: config .NET Core
       run: export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
     - name: Test
-      run: dotnet test ./thainlp/*.sln
+      run: dotnet test thainlp/*.sln
