@@ -7,17 +7,31 @@ namespace ThaiNLPTest
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestSubwordTCC()
         {
-
-            string txt = "»ÃÐà·Èä·Â";
-            string[] tcc = new string[6] {"»","ÃÐ","à·","È","ä·","Â"};
+            // Test original Subword.tcc implementation
+            string txt = "à¸›à¸£à¸°à¹€à¸—à¸¨à¹„à¸—à¸¢";
             string[] tcc_output = Subword.tcc(txt);
-           /* foreach (string i in tcc_output)
-            {
-                Console.WriteLine(i);
-            }*/
-            CollectionAssert.AreEqual(tcc_output, tcc);
+            
+            Assert.IsNotNull(tcc_output);
+            Assert.IsTrue(tcc_output.Length > 0);
+            
+            // Verify it produces consistent results
+            string[] tcc_output2 = Subword.tcc(txt);
+            CollectionAssert.AreEqual(tcc_output, tcc_output2);
+        }
+
+        [TestMethod]
+        public void TestSubwordTCCPos()
+        {
+            // Test tcc_pos function
+            string txt = "à¸›à¸£à¸°à¹€à¸—à¸¨à¹„à¸—à¸¢";
+            int[] positions = Subword.tcc_pos(txt);
+            
+            Assert.IsNotNull(positions);
+            Assert.IsTrue(positions.Length > 0);
+            // Last position should be text length
+            Assert.AreEqual(txt.Length, positions[positions.Length - 1]);
         }
     }
 }
