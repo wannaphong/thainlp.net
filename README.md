@@ -12,6 +12,19 @@ Thai NLP in .NET
 
 ## Installation
 
+### From NuGet (Recommended)
+
+```bash
+dotnet add package ThaiNLP.NET
+```
+
+Or via Package Manager:
+```
+Install-Package ThaiNLP.NET
+```
+
+### From Source
+
 Build the project:
 ```bash
 dotnet build
@@ -95,6 +108,24 @@ Run the test suite:
 ```bash
 dotnet test
 ```
+
+## Publishing to NuGet
+
+The project is configured to automatically publish to NuGet when changes are pushed to the `main` branch.
+
+To enable automatic publishing:
+1. Create a NuGet API key at [nuget.org](https://www.nuget.org/account/apikeys)
+2. Add the API key as a secret in your GitHub repository settings:
+   - Go to Settings → Secrets and variables → Actions
+   - Add a new repository secret named `NUGET_API_KEY`
+   - Paste your NuGet API key as the value
+
+The GitHub Actions workflow will automatically:
+- Build the project
+- Run tests
+- Create the NuGet package
+- Upload the package as an artifact
+- Publish to NuGet (only on main branch)
 
 ## License
 
