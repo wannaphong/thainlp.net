@@ -109,23 +109,50 @@ Run the test suite:
 dotnet test
 ```
 
-## Publishing to NuGet
+## Creating a Release
 
-The project is configured to automatically publish to NuGet when changes are pushed to the `main` branch.
+The project is configured to automatically create GitHub releases and publish to NuGet when a version tag is pushed.
 
-To enable automatic publishing:
+### Prerequisites
+
 1. Create a NuGet API key at [nuget.org](https://www.nuget.org/account/apikeys)
 2. Add the API key as a secret in your GitHub repository settings:
    - Go to Settings → Secrets and variables → Actions
    - Add a new repository secret named `NUGET_API_KEY`
    - Paste your NuGet API key as the value
 
+### Release Process
+
+1. Update the version in `thainlp/Thainlp.csproj`:
+   ```xml
+   <Version>0.1.0</Version>
+   ```
+
+2. Commit your changes:
+   ```bash
+   git commit -am "Bump version to 0.1.0"
+   git push
+   ```
+
+3. Create and push a version tag:
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+
 The GitHub Actions workflow will automatically:
 - Build the project
 - Run tests
 - Create the NuGet package
-- Upload the package as an artifact
-- Publish to NuGet (only on main branch)
+- Create a GitHub release with the package attached
+- Publish to NuGet
+
+### Continuous Integration
+
+Every push to any branch triggers the CI workflow which:
+- Builds the project
+- Runs tests
+- Creates the NuGet package as an artifact (not published)
 
 ## License
 
