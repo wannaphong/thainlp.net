@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>ThaiNLP.NET</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Wannaphong Phatthiyaphaibun</Authors>
     <Company>ThaiNLP</Company>
     <Product>ThaiNLP.NET</Product>
