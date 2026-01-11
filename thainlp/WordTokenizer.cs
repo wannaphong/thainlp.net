@@ -36,43 +36,76 @@ namespace Thainlp
         }
 
         /// <summary>
-        /// Load the default Thai word dictionary from file.
+        /// Load the default Thai word dictionary from embedded resource.
         /// </summary>
         private static Trie LoadDefaultDict()
         {
             var words = new List<string>();
-            
-            // Try to load from file next to the assembly
-            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string dictPath = Path.Combine(assemblyPath, "words_th.txt");
-            
-            // Alternative: check current directory
-            if (!File.Exists(dictPath))
-            {
-                dictPath = "words_th.txt";
-            }
-            
-            // Alternative: check in thainlp subdirectory
-            if (!File.Exists(dictPath))
-            {
-                dictPath = Path.Combine("thainlp", "words_th.txt");
-            }
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Thainlp.words_th.txt";
 
-            if (File.Exists(dictPath))
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
-                foreach (var line in File.ReadLines(dictPath))
+                if (stream == null)
                 {
-                    var word = line.Trim();
-                    if (!string.IsNullOrEmpty(word))
+                    // Fallback: try to load from file system for backward compatibility
+                    string assemblyLocation = assembly.Location;
+                    string assemblyPath = !string.IsNullOrEmpty(assemblyLocation) 
+                        ? Path.GetDirectoryName(assemblyLocation) 
+                        : null;
+                    
+                    string dictPath = null;
+                    
+                    // Try to load from file next to the assembly
+                    if (!string.IsNullOrEmpty(assemblyPath))
                     {
-                        words.Add(word);
+                        dictPath = Path.Combine(assemblyPath, "words_th.txt");
+                    }
+                    
+                    // Alternative: check current directory
+                    if (string.IsNullOrEmpty(dictPath) || !File.Exists(dictPath))
+                    {
+                        dictPath = "words_th.txt";
+                    }
+                    
+                    // Alternative: check in thainlp subdirectory
+                    if (!File.Exists(dictPath))
+                    {
+                        dictPath = Path.Combine("thainlp", "words_th.txt");
+                    }
+
+                    if (File.Exists(dictPath))
+                    {
+                        foreach (var line in File.ReadLines(dictPath))
+                        {
+                            var word = line.Trim();
+                            if (!string.IsNullOrEmpty(word))
+                            {
+                                words.Add(word);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // If no dictionary file found, return empty trie
+                        Console.WriteLine("Warning: Dictionary file not found. Tried embedded resource and multiple file system locations.");
                     }
                 }
-            }
-            else
-            {
-                // If no dictionary file found, return empty trie
-                Console.WriteLine($"Warning: Dictionary file not found at {dictPath}");
+                else
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            var word = line.Trim();
+                            if (!string.IsNullOrEmpty(word))
+                            {
+                                words.Add(word);
+                            }
+                        }
+                    }
+                }
             }
 
             return new Trie(words);
