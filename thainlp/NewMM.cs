@@ -175,6 +175,20 @@ namespace Thainlp
                     posList.Add(endPos);
                 }
             }
+
+            // Output remaining tokens from endPos to textLength
+            if (endPos < textLength)
+            {
+                var paths = BfsPathsGraph(graph, endPos, textLength).FirstOrDefault();
+                if (paths != null)
+                {
+                    for (int i = 1; i < paths.Count; i++)
+                    {
+                        yield return text.Substring(endPos, paths[i] - endPos);
+                        endPos = paths[i];
+                    }
+                }
+            }
         }
 
         /// <summary>
