@@ -49,11 +49,21 @@ namespace Thainlp
                 if (stream == null)
                 {
                     // Fallback: try to load from file system for backward compatibility
-                    string assemblyPath = Path.GetDirectoryName(assembly.Location);
-                    string dictPath = Path.Combine(assemblyPath, "words_th.txt");
+                    string assemblyLocation = assembly.Location;
+                    string assemblyPath = !string.IsNullOrEmpty(assemblyLocation) 
+                        ? Path.GetDirectoryName(assemblyLocation) 
+                        : null;
+                    
+                    string dictPath = null;
+                    
+                    // Try to load from file next to the assembly
+                    if (!string.IsNullOrEmpty(assemblyPath))
+                    {
+                        dictPath = Path.Combine(assemblyPath, "words_th.txt");
+                    }
                     
                     // Alternative: check current directory
-                    if (!File.Exists(dictPath))
+                    if (string.IsNullOrEmpty(dictPath) || !File.Exists(dictPath))
                     {
                         dictPath = "words_th.txt";
                     }
@@ -78,7 +88,7 @@ namespace Thainlp
                     else
                     {
                         // If no dictionary file found, return empty trie
-                        Console.WriteLine($"Warning: Dictionary file not found at {dictPath}");
+                        Console.WriteLine("Warning: Dictionary file not found. Tried embedded resource and multiple file system locations.");
                     }
                 }
                 else
