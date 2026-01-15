@@ -1,0 +1,183 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Thainlp
+{
+    /// <summary>
+    /// Convert number value to Thai read out.
+    /// Adapted from PyThaiNLP's num_to_thaiword implementation.
+    /// </summary>
+    public class NumToWord
+    {
+        private static readonly string[] _VALUES = new[]
+        {
+            "",
+            "หนึ่ง",
+            "สอง",
+            "สาม",
+            "สี่",
+            "ห้า",
+            "หก",
+            "เจ็ด",
+            "แปด",
+            "เก้า"
+        };
+
+        private static readonly string[] _PLACES = new[]
+        {
+            "",
+            "สิบ",
+            "ร้อย",
+            "พัน",
+            "หมื่น",
+            "แสน",
+            "ล้าน"
+        };
+
+        private static readonly Dictionary<string, string> _EXCEPTIONS = new Dictionary<string, string>
+        {
+            { "หนึ่งสิบ", "สิบ" },
+            { "สองสิบ", "ยี่สิบ" },
+            { "สิบหนึ่ง", "สิบเอ็ด" }
+        };
+
+        /// <summary>
+        /// This function converts a number to Thai text and adds
+        /// a suffix "บาท" (Baht).
+        /// The precision will be fixed at two decimal places (0.00)
+        /// to fits "สตางค์" (Satang) unit.
+        /// This function works similar to BAHTTEXT function in Microsoft Excel.
+        /// </summary>
+        /// <param name="number">Number to be converted into Thai Baht currency format</param>
+        /// <returns>Text representing the amount of money in the format of Thai currency</returns>
+        /// <example>
+        /// <code>
+        /// NumToWord.BahtText(1)
+        /// // output: หนึ่งบาทถ้วน
+        /// 
+        /// NumToWord.BahtText(21)
+        /// // output: ยี่สิบเอ็ดบาทถ้วน
+        /// 
+        /// NumToWord.BahtText(200)
+        /// // output: สองร้อยบาทถ้วน
+        /// </code>
+        /// </example>
+        public static string BahtText(double? number)
+        {
+            if (number == null)
+            {
+                return "";
+            }
+            else if (number == 0)
+            {
+                return "ศูนย์บาทถ้วน";
+            }
+            else
+            {
+                string formatted = number.Value.ToString("F2");
+                string[] parts = formatted.Split('.');
+                
+                // Use long to handle larger numbers
+                long numInt = long.Parse(parts[0]);
+                int numDec = int.Parse(parts[1]);
+
+                var result = new StringBuilder();
+                
+                string baht = NumToThaiWord(numInt);
+                if (!string.IsNullOrEmpty(baht))
+                {
+                    result.Append(baht).Append("บาท");
+                }
+
+                string satang = NumToThaiWord(numDec);
+                if (!string.IsNullOrEmpty(satang) && satang != "ศูนย์")
+                {
+                    result.Append(satang).Append("สตางค์");
+                }
+                else
+                {
+                    result.Append("ถ้วน");
+                }
+
+                return result.ToString();
+            }
+        }
+
+        /// <summary>
+        /// This function converts number to Thai text.
+        /// </summary>
+        /// <param name="number">An integer number to be converted to Thai text</param>
+        /// <returns>Text representing the number in Thai</returns>
+        /// <example>
+        /// <code>
+        /// NumToWord.NumToThaiWord(1)
+        /// // output: หนึ่ง
+        /// 
+        /// NumToWord.NumToThaiWord(11)
+        /// // output: สิบเอ็ด
+        /// </code>
+        /// </example>
+        public static string NumToThaiWord(int? number)
+        {
+            if (number == null)
+            {
+                return "";
+            }
+            return NumToThaiWord((long)number.Value);
+        }
+
+        /// <summary>
+        /// This function converts number to Thai text.
+        /// </summary>
+        /// <param name="number">A long number to be converted to Thai text</param>
+        /// <returns>Text representing the number in Thai</returns>
+        public static string NumToThaiWord(long? number)
+        {
+            if (number == null)
+            {
+                return "";
+            }
+            else if (number == 0)
+            {
+                return "ศูนย์";
+            }
+
+            long numberTemp = number.Value;
+            string numberStr = Math.Abs(number.Value).ToString();
+            char[] digits = numberStr.ToCharArray();
+            Array.Reverse(digits);
+
+            var output = new StringBuilder();
+            
+            for (int place = 0; place < digits.Length; place++)
+            {
+                if (place % 6 == 0 && place > 0)
+                {
+                    output.Insert(0, _PLACES[6]);
+                }
+
+                if (digits[place] != '0')
+                {
+                    int value = int.Parse(digits[place].ToString());
+                    output.Insert(0, _PLACES[place % 6]);
+                    output.Insert(0, _VALUES[value]);
+                }
+            }
+
+            string result = output.ToString();
+            
+            foreach (var exception in _EXCEPTIONS)
+            {
+                result = result.Replace(exception.Key, exception.Value);
+            }
+
+            if (numberTemp < 0)
+            {
+                result = "ลบ" + result;
+            }
+
+            return result;
+        }
+    }
+}

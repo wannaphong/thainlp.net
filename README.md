@@ -10,6 +10,10 @@ Thai NLP in .NET
 ### Subword Tokenization
 - **TCC** (Thai Character Cluster) tokenization for breaking text into character clusters
 
+### Number to Thai Word Conversion
+- **NumToThaiWord** - Convert numbers to Thai text representation
+- **BahtText** - Convert numbers to Thai currency format (Baht and Satang)
+
 ## Installation
 
 ### From NuGet (Recommended)
@@ -91,6 +95,26 @@ var clusters = Subword.tcc("ประเทศไทย");
 var positions = Subword.tcc_pos("ประเทศไทย");
 ```
 
+### Number to Thai Word Conversion
+
+```csharp
+using Thainlp;
+
+// Convert number to Thai words
+string text = NumToWord.NumToThaiWord(112);
+// Output: หนึ่งร้อยสิบสอง
+
+string negative = NumToWord.NumToThaiWord(-273);
+// Output: ลบสองร้อยเจ็ดสิบสาม
+
+// Convert to Thai Baht currency format
+string baht = NumToWord.BahtText(5611116.50);
+// Output: ห้าล้านหกแสนหนึ่งหมื่นหนึ่งพันหนึ่งร้อยสิบหกบาทห้าสิบสตางค์
+
+string simple = NumToWord.BahtText(116);
+// Output: หนึ่งร้อยสิบหกบาทถ้วน
+```
+
 ## API Compatibility with PyThaiNLP
 
 This library provides an API similar to PyThaiNLP:
@@ -101,6 +125,8 @@ This library provides an API similar to PyThaiNLP:
 | `word_tokenize(text, engine="newmm")` | `WordTokenizer.WordTokenize(text, engine: "newmm")` |
 | `word_tokenize(text, custom_dict=trie)` | `WordTokenizer.WordTokenize(text, customDict: trie)` |
 | `word_tokenize(text, keep_whitespace=False)` | `WordTokenizer.WordTokenize(text, keepWhitespace: false)` |
+| `num_to_thaiword(number)` | `NumToWord.NumToThaiWord(number)` |
+| `bahttext(number)` | `NumToWord.BahtText(number)` |
 
 ## Testing
 
