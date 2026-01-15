@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Thainlp
 {
@@ -64,41 +65,43 @@ namespace Thainlp
         /// </example>
         public static string BahtText(double? number)
         {
-            string ret = "";
-
             if (number == null)
             {
-                return ret;
+                return "";
             }
             else if (number == 0)
             {
-                ret = "ศูนย์บาทถ้วน";
+                return "ศูนย์บาทถ้วน";
             }
             else
             {
                 string formatted = number.Value.ToString("F2");
                 string[] parts = formatted.Split('.');
-                int numInt = int.Parse(parts[0]);
+                
+                // Use long to handle larger numbers
+                long numInt = long.Parse(parts[0]);
                 int numDec = int.Parse(parts[1]);
 
+                var result = new StringBuilder();
+                
                 string baht = NumToThaiWord(numInt);
                 if (!string.IsNullOrEmpty(baht))
                 {
-                    ret = ret + baht + "บาท";
+                    result.Append(baht).Append("บาท");
                 }
 
                 string satang = NumToThaiWord(numDec);
                 if (!string.IsNullOrEmpty(satang) && satang != "ศูนย์")
                 {
-                    ret = ret + satang + "สตางค์";
+                    result.Append(satang).Append("สตางค์");
                 }
                 else
                 {
-                    ret = ret + "ถ้วน";
+                    result.Append("ถ้วน");
                 }
-            }
 
-            return ret;
+                return result.ToString();
+            }
         }
 
         /// <summary>
@@ -117,48 +120,64 @@ namespace Thainlp
         /// </example>
         public static string NumToThaiWord(int? number)
         {
-            string output = "";
-
             if (number == null)
             {
-                return output;
+                return "";
+            }
+            return NumToThaiWord((long)number.Value);
+        }
+
+        /// <summary>
+        /// This function converts number to Thai text.
+        /// </summary>
+        /// <param name="number">A long number to be converted to Thai text</param>
+        /// <returns>Text representing the number in Thai</returns>
+        public static string NumToThaiWord(long? number)
+        {
+            if (number == null)
+            {
+                return "";
             }
             else if (number == 0)
             {
-                output = "ศูนย์";
-                return output;
+                return "ศูนย์";
             }
 
-            int numberTemp = number.Value;
+            long numberTemp = number.Value;
             string numberStr = Math.Abs(number.Value).ToString();
             char[] digits = numberStr.ToCharArray();
             Array.Reverse(digits);
 
+            var output = new StringBuilder();
+            
             for (int place = 0; place < digits.Length; place++)
             {
                 if (place % 6 == 0 && place > 0)
                 {
-                    output = _PLACES[6] + output;
+                    output.Insert(0, _PLACES[6]);
                 }
 
                 if (digits[place] != '0')
                 {
                     int value = int.Parse(digits[place].ToString());
-                    output = _VALUES[value] + _PLACES[place % 6] + output;
+                    output.Insert(0, _PLACES[place % 6]);
+                    output.Insert(0, _VALUES[value]);
                 }
             }
 
+            string result = output.ToString();
+            
             foreach (var exception in _EXCEPTIONS)
             {
-                output = output.Replace(exception.Key, exception.Value);
+                result = result.Replace(exception.Key, exception.Value);
             }
 
             if (numberTemp < 0)
             {
-                output = "ลบ" + output;
+                result = "ลบ" + result;
             }
 
-            return output;
+            return result;
         }
     }
 }
